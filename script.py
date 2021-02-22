@@ -80,6 +80,7 @@ while True:
             beepy.beep(sound='robot_error')
             vaccineData = input()
         elif 'true' in result:
+            beepy.beep(sound='success')
             printSuccess("Vaccine Available")
             resultData = json.loads(result)
             for dateAvailability in resultData['availability']:
@@ -91,7 +92,6 @@ while True:
                     for slot in slotsData['slotsWithAvailability']:
                         printSuccess("Time: " + slot['localStartTime'], index=2)
             printSuccess("Location:" + location, index=1)
-            beepy.beep(sound='success')
         else:
             printFail("Vaccine Not Available at " + location)
         time.sleep(5)
