@@ -86,13 +86,13 @@ while True:
             beepy.beep(sound='robot_error')
             vaccineData = input()
         elif 'true' in locationResult:
-            beepy.beep(sound='success')
             printSuccess("Vaccine Available")
             searchQuery = getSearchQuery(startDate)
             searchResult = os.popen(searchQuery).read()
             searchData = json.loads(searchResult)
             if len(searchData['locations']) > 0:
                 printSuccess('Searchable on Web')
+                beepy.beep(sound='success')
             else:
                 printFail('Unsearchable on Web')
             locationData = json.loads(locationResult)
