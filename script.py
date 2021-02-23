@@ -18,9 +18,8 @@ locations = {
     "a2ut0000006a92aAAA": "Alameda County - CalOES (Walk up 2)"
     }
 
-def getSearchQuery(startDate):
-    return """curl -s 'https://api.myturn.ca.gov/public/locations/search' \
-        -H 'authority: api.myturn.ca.gov' \
+def prepareHeaders():
+    return """-H 'authority: api.myturn.ca.gov' \
         -H 'accept: application/json, text/plain, */*' \
         -H 'x-correlation-id: 099e3439-9243-4d3b-bd51-0d28956714a0' \
         -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36' \
@@ -31,58 +30,29 @@ def getSearchQuery(startDate):
         -H 'sec-fetch-dest: empty' \
         -H 'referer: https://myturn.ca.gov/' \
         -H 'accept-language: en-US,en;q=0.9' \
-        -H 'cookie: """ + cookie + """' \
+        -H 'cookie: """ + cookie + """'"""
+
+def getSearchQuery(startDate):
+    return """curl -s 'https://api.myturn.ca.gov/public/locations/search' \
+        """ + prepareHeaders() + """ \
         --data-raw '{"location":{"lat":37.791904699999996,"lng":-122.4078356},"fromDate":\"""" + startDate + """\","vaccineData":\"""" + vaccineData + """\","locationQuery":{"includePools":["default"]},"url":"https://myturn.ca.gov/location-select"}' \
         --compressed"""
 
 def getLocationQuery(locationId, startDate, endDate):
     return """curl -s 'https://api.myturn.ca.gov/public/locations/""" + locationId + """/availability' \
-        -H 'authority: api.myturn.ca.gov' \
-        -H 'accept: application/json, text/plain, */*' \
-        -H 'x-correlation-id: ee7c62e3-9136-4b44-923c-56f62ceac2bb' \
-        -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36' \
-        -H 'content-type: application/json;charset=UTF-8' \
-        -H 'origin: https://myturn.ca.gov' \
-        -H 'sec-fetch-site: same-site' \
-        -H 'sec-fetch-mode: cors' \
-        -H 'sec-fetch-dest: empty' \
-        -H 'referer: https://myturn.ca.gov/' \
-        -H 'accept-language: en-US,en;q=0.9' \
-        -H 'cookie: """ + cookie + """' \
+        """ + prepareHeaders() + """ \
         --data-raw '{"startDate":\"""" + startDate + """\","endDate":\"""" + endDate + """\","vaccineData":\"""" + vaccineData + """\","doseNumber":1,"url":"https://myturn.ca.gov/appointment-select"}' \
         --compressed"""
 
 def getSlotsQuery(locationId, availableDate):
     return """curl -s 'https://api.myturn.ca.gov/public/locations/"""+ locationId +"""/date/""" + availableDate + """/slots' \
-        -H 'authority: api.myturn.ca.gov' \
-        -H 'accept: application/json, text/plain, */*' \
-        -H 'x-correlation-id: ee7c62e3-9136-4b44-923c-56f62ceac2bb' \
-        -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36' \
-        -H 'content-type: application/json;charset=UTF-8' \
-        -H 'origin: https://myturn.ca.gov' \
-        -H 'sec-fetch-site: same-site' \
-        -H 'sec-fetch-mode: cors' \
-        -H 'sec-fetch-dest: empty' \
-        -H 'referer: https://myturn.ca.gov/' \
-        -H 'accept-language: en-US,en;q=0.9' \
-        -H 'cookie: """ + cookie + """"' \
+        """ + prepareHeaders() + """ \
         --data-raw '{"vaccineData":\"""" + vaccineData + """\","url":"https://myturn.ca.gov/appointment-select"}' \
         --compressed"""
 
 def getReserveQuery(locationId, availableDate, availableSlot):
     return """curl -s 'https://api.myturn.ca.gov/public/locations/""" + locationId + """/date/""" + availableDate + """/slots/reserve' \
-        -H 'authority: api.myturn.ca.gov' \
-        -H 'accept: application/json, text/plain, */*' \
-        -H 'x-correlation-id: ee7c62e3-9136-4b44-923c-56f62ceac2bb' \
-        -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36' \
-        -H 'content-type: application/json;charset=UTF-8' \
-        -H 'origin: https://myturn.ca.gov' \
-        -H 'sec-fetch-site: same-site' \
-        -H 'sec-fetch-mode: cors' \
-        -H 'sec-fetch-dest: empty' \
-        -H 'referer: https://myturn.ca.gov/' \
-        -H 'accept-language: en-US,en;q=0.9' \
-        -H 'cookie: """ + cookie + """' \
+        """ + prepareHeaders() + """ \
         --data-raw '{"dose":1,"locationExtId":\"""" + locationId + """\","date":\"""" + availableDate + """\","localStartTime":\"""" + availableSlot + """\","vaccineData":\"""" + vaccineData + """\","url":"https://myturn.ca.gov/appointment-select"}' \
         --compressed"""
 
