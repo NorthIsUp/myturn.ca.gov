@@ -56,6 +56,9 @@ class PatientData(Enum):
     RECENTLY_VACCINATED = IdTypeValue("q.patient.recently.vaccinated", "single-select", "No")
     ALLERGIES = IdTypeValue("q.patient.allergies", "single-select", "No")
 
+# Specify User's Latitude and Longitude
+LAT = "37.791904699999996"
+LNG = "-122.4078356"
 
 DEBUG = False
 FIRST_DATE_OFFSET_HOURS = 24
@@ -69,7 +72,6 @@ locations = OrderedDict()
 locations["a2ut0000006a8t9AAA"] = "San Francisco Moscone Center (SOUTH)"
 locations["a2ut0000006a92VAAQ"] = "Alameda County - CalOES (Drive Thru 2)"
 locations["a2ut0000006a92aAAA"] = "Alameda County - CalOES (Walk up 2)"
-
 
 def getEligibityQuestionResponse():
     return json.dumps([e.value.__dict__  for e in PatientEligibilityData])
@@ -100,7 +102,7 @@ def getCurlQuery(url, payload):
 def getSearchQuery(startDate):
     return getCurlQuery(
         """https://api.myturn.ca.gov/public/locations/search""",
-        """{"location":{"lat":37.791904699999996,"lng":-122.4078356},"fromDate":\"""" + startDate + """\","vaccineData":\"""" + vaccineData + """\","locationQuery":{"includePools":["default"]},"url":"https://myturn.ca.gov/location-select"}"""
+        """{"location":{"lat":""" + LAT + ""","lng":""" + LNG + """},"fromDate":\"""" + startDate + """\","vaccineData":\"""" + vaccineData + """\","locationQuery":{"includePools":["default"]},"url":"https://myturn.ca.gov/location-select"}"""
     )
 
 def getLocationQuery(locationId, startDate, endDate, doseNumber=1):
@@ -208,11 +210,6 @@ def getFirstAvailableDate(startDate, range=7):
 def getFirstAvailableDateFromToday():
     startDate = datetime.datetime.now().astimezone(timezone('US/Pacific')) + datetime.timedelta(hours=FIRST_DATE_OFFSET_HOURS)
     return getFirstAvailableDate(startDate)
-
-def getIssueIdFromDose1Reservation(dose1ReservationId):
-    issueQuery = getIssueQuery(dose1ReservationId)
-    issueData = getQueryResult(issueQuery)
-    return issueData['id']
 
 def bookAppointment(dose1ReservationId, dose2ReservationId):
     issueQuery = getIssueQuery(dose1ReservationId)
