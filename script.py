@@ -57,6 +57,7 @@ class PatientData(Enum):
     ALLERGIES = IdTypeValue("q.patient.allergies", "single-select", "No")
 
 
+DEBUG = False
 FIRST_DATE_OFFSET_HOURS = 24
 date_format='%m/%d/%Y %H:%M:%S %Z'
 query_date_format='%Y-%m-%d'
@@ -149,7 +150,9 @@ def getAppointmentQuery(issueId, oneTimeCode, dose1ReservationId, dose2Reservati
 
 def getQueryResult(query):
     result = json.loads(os.popen(query).read())
-    pprint(result)
+    if DEBUG:
+        pprint(query)
+        pprint(result)
     return result
 
 def printColor(string, back, fore, index=0):
