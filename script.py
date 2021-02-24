@@ -268,8 +268,7 @@ def monitorAvailability():
             elif 'true' in locationResult:
                 printSuccess("Vaccine Available")
                 searchQuery = getSearchQuery(startDate)
-                searchResult = os.popen(searchQuery).read()
-                searchData = json.loads(searchResult)
+                searchData = getQueryResult(searchQuery)
                 if len(searchData['locations']) > 0:
                     printSuccess('Searchable on Web')
                     beepy.beep(sound='success')
@@ -279,9 +278,8 @@ def monitorAvailability():
                 for dateAvailability in locationData['availability']:
                     if dateAvailability['available']:
                         printSuccess("Date: " + dateAvailability['date'], index=1)
-                        query = getSlotsQuery(locationId, dateAvailability['date'])
-                        slotResult = os.popen(query).read()
-                        slotsData = json.loads(slotResult)
+                        slotsQuery = getSlotsQuery(locationId, dateAvailability['date'])
+                        slotsData = getQueryResult(slotsQuery)
                         for slot in slotsData['slotsWithAvailability']:
                             printSuccess("Time: " + slot['localStartTime'], index=2)
                 printSuccess("Location:" + location, index=1)
